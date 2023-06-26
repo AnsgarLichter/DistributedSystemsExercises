@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "TransactionalTestClient",
+            "request": "launch",
+            "mainClass": "tcc.TransactionalTestClient",
+            "projectName": "vislab-rest-tcc"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"

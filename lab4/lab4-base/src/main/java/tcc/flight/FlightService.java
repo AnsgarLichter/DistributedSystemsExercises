@@ -1,5 +1,7 @@
 package tcc.flight;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -87,6 +89,25 @@ public class FlightService {
 	public FlightReservationDoc getBooking(@PathParam("id") String id) {
 		logger.info("GET request received on /flight/" + id);
 		return reservationToReservationDoc(frs.getReservation(UUID.fromString(id)));
+	}
+
+	@POST
+	@Path("dummy")
+	@Produces(MediaType.APPLICATION_XML)
+	public Response dummy() {
+
+		GregorianCalendar tomorrow = new GregorianCalendar();
+		tomorrow.setTime(new Date());
+		tomorrow.add(GregorianCalendar.DAY_OF_YEAR, 1);
+
+		FlightReservationDoc docFlight = new FlightReservationDoc();
+		docFlight.setName("Christian");
+		docFlight.setFrom("Karlsruhe");
+		docFlight.setTo("Berlin");
+		docFlight.setAirline("airberlin");
+		docFlight.setDate(tomorrow.getTimeInMillis());
+
+		return Response.status(Response.Status.OK).entity(docFlight).build();
 	}
 
 	@PUT

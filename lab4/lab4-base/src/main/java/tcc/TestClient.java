@@ -67,6 +67,41 @@ public class TestClient {
 			HotelReservationDoc outputHotel = responseHotel.readEntity(HotelReservationDoc.class);
 			System.out.println("Output from Server: " + outputHotel);
 
+			if (responseHotel.getStatus() != 200 || responseFlight.getStatus() != 200) {
+				// cancel flight booking
+				try {
+					WebTarget cancelFlightTarget = client.target(outputFlight.getUrl());
+					Response deleteFlightResponse = cancelFlightTarget.request().accept(MediaType.TEXT_PLAIN).delete();
+					System.out.println("Cancel flight response: " + deleteFlightResponse);
+				} catch (Exception e) {
+					System.out.println("Cancel flight request failed" + e.getMessage());
+				}
+
+				// cancel hotel booking
+				try {
+					WebTarget deleteHotelTarget = client.target(outputHotel.getUrl());
+					Response deleteHotelResponse = deleteHotelTarget.request().accept(MediaType.TEXT_PLAIN).delete();
+					System.out.println("Cancel hotel response: " + deleteHotelResponse);
+				} catch (Exception e) {
+					System.out.println("Cancel hotel request failed" + e.getMessage());
+				}
+
+				System.out.println("Canceled preliminary bookings");
+				return;
+			}
+
+			// confirm flight booking
+			WebTarget confirmFlightTarget = client.target(outputFlight.getUrl());
+			Response confirmFlightResponse = confirmFlightTarget.request().accept(MediaType.TEXT_PLAIN)
+					.put(Entity.json(""));
+			System.out.println("Confirm flight response: " + confirmFlightResponse);
+
+			// confirm hotel booking
+			WebTarget confirmHotelTarget = client.target(outputHotel.getUrl());
+			Response confirmHotelResponse = confirmHotelTarget.request().accept(MediaType.TEXT_PLAIN)
+					.put(Entity.json(""));
+			System.out.println("Confirm flight response: " + confirmHotelResponse);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
