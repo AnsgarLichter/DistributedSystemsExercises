@@ -52,8 +52,6 @@ public class TransactionalTestClient {
             HotelReservationDoc outputHotel = responseHotel.readEntity(HotelReservationDoc.class);
             String reservationId = extractId(outputHotel.getUrl());
 
-            System.out.println("res " + reservationId);
-
             boolean confirmTransaction = responseFlightStatus == 200 && responseHotelStatus == 200;
 
             Invocation.Builder flightBuilder = target.path("flight/{id}").resolveTemplate("id", flightId).request()
@@ -72,7 +70,7 @@ public class TransactionalTestClient {
     }
 
     private static boolean tryDoing(int counter, int responseFlightStatus) {
-        return responseFlightStatus != 200 && responseFlightStatus != 409 && counter < MAX_RETRY;
+        return responseFlightStatus != 200 && counter < MAX_RETRY;
     }
 
     private static void commit(Invocation.Builder flightBuilder, Invocation.Builder hotelBuilder, String flightId, String hotelId) {
